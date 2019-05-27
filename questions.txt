@@ -1,0 +1,4 @@
+Tu veux te pendre? ; oui ; non ;
+Les animaux sans poils ont-ils froid ? ; oui ; non ;
+Est-ce-que Marco est un bon gars? ; oui ; oui ;
+C'est quoi le principe de ces questions? ; C'est celles du jeu ; juste pour voir si ça fonctionne ;
