@@ -1,39 +1,13 @@
-import numpy as np
+from parsing import parseQuestions
 
 verbose = 0
-
-def read_file_questions(Q) :
-    A=open("questions.txt",'r')
-    line = A.readline().split(";")
-    while line != [''] :
-        Q.append(line[:-1])
-        line = A.readline().split(";")
-        #print ('le texte : ', line)
-    A.close()
-
-def read_file_effects(E) :
-    A=open("effets.txt",'r')
-    line = A.readline().split(";")
-    while line != [''] :
-        E.append(line[:-1])
-        line = A.readline().split(";")
-        #print ('les effets : ', line)
-    A.close()
-
-
-def createIndexTab(qst_tab) :
-    newTab = np.arange(0, len(qst_tab))
-    np.random.shuffle(newTab)
-    return (newTab)
-
-def getQuestion(index_tab):
-    i = index_tab[0]
+# Recuperer la question et la supprimer du tableau
+def getQuestion(questions):
+    i = questions[0]
+    questions.pop(0)
     return (i)
 
-def deleteQuestion(index_tab):
-    newTab = index_tab = np.delete(index_tab, [0])
-    return (newTab)
-
+# Lire sur l'entree standard le choix du joueur
 def readChoice():
     while (1):
         res = input()
@@ -42,41 +16,60 @@ def readChoice():
         elif (res.strip() == "b"):
             return (1)
 
+# Check si on est dans les limites (peuple, richesse)
+def checkDead(p, w):
+    return (p <= 0 or p >= 50 or w <= 0 or w >= 50)
+
+# Appliquer l'effet
+def applyEffect(nb_people, nb_wealth, question, choice):
+    if (choice):
+        nb_people[0] += question.answ_2_people
+        nb_wealth[0] += question.answ_2_wealth
+    else:
+        nb_people[0] += question.answ_1_people
+        nb_wealth[0] += question.answ_1_wealth
+
+# Afficher le dilemne
+def showMonthQuestion(question):
+    print("\nLa question du mois est :")
+    print(question.questionTxt)
+    print("a)", question.answ_1)
+    print("b)", question.answ_2)
+
 def game () :
-    qst_tab = []
-    read_file_questions(qst_tab)
-    if (verbose):
-        print ('le texte :', qst_tab[0])
+    # On charge les questions
+    questions = parseQuestions()
 
-    eff_tab = []
-    read_file_effects(eff_tab)
-    if (verbose):
-        print ('les effets :', eff_tab)
+    # Initialisation des variables de depart
+    dead = 0
+    nb_people = [25]
+    nb_wealth = [25]
 
-    index_tab = createIndexTab(qst_tab)
-    if (verbose):
-        print(index_tab)
+    # Tant qu'on n'est pas mort et qu'il reste des questions
+    while (len(questions) and not dead): 
+        print("Peuple:", nb_people[0])
+        print("Richesse:", nb_wealth[0])
 
-    nb_people = 25
-    nb_wealth = 25
-    while (len(index_tab)):
-        print("Peuple:", nb_people)
-        print("Richesse:", nb_wealth)
+        # Recuperer la fonction et la supprimer du tableau
+        question = getQuestion(questions) 
+        if (verbose):
+            question.debug()
 
-        qst_index = getQuestion(index_tab)
-        index_tab = deleteQuestion(index_tab)
-
-        qst_entity = qst_tab[qst_index]
-        qst_text = qst_entity[0].strip()
-        qst_choice_a = qst_entity[1].strip()
-        qst_choice_b = qst_entity[2].strip()
-
-        print("\nLa question du mois est :")
-        print(qst_text)
-        print("a)", qst_choice_a)
-        print("b)", qst_choice_b)
+        # Afficher le dilemne
+        showMonthQuestion(question) 
         
+        # Recuperer le choix
         choice = readChoice()
 
+        # Appliquer l'effet de la question
+        applyEffect(nb_people, nb_wealth, question, choice) 
+        
+        # Check si on est dans les limites (peuple, richesse)
+        if (checkDead(nb_people[0], nb_wealth[0])): 
+            dead = 1
+
+    # yes la meuf est dead
+    if (dead): 
+        print("t mort pas dchance lol")
 
 game()
