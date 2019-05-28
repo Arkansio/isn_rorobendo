@@ -47,7 +47,7 @@ def game () :
 
     # Tant qu'on n'est pas mort et qu'il reste des questions
     while (len(questions) and not dead): 
-        print("Peuple:", nb_people[0])
+        print("\nPeuple:", nb_people[0])
         print("Richesse:", nb_wealth[0])
 
         # Recuperer la fonction et la supprimer du tableau

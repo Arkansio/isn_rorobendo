@@ -1,8 +1,8 @@
 class Question:
     def __init__(self, questionTxt, answ_1, answ_2, answ_1_people, answ_1_wealth, answ_2_people, answ_2_wealth):
-        self.questionTxt = questionTxt
-        self.answ_1 = answ_1
-        self.answ_2 = answ_2
+        self.questionTxt = questionTxt.strip()
+        self.answ_1 = answ_1.strip()
+        self.answ_2 = answ_2.strip()
         self.answ_1_people = int(answ_1_people)
         self.answ_1_wealth = int(answ_1_wealth)
         self.answ_2_people = int(answ_2_people)
