@@ -1,4 +1,6 @@
+from Tkinter import *
 from parsing import parseQuestions
+from question_window import Question_window
 
 verbose = 0
 # Recuperer la question et la supprimer du tableau
@@ -8,13 +10,10 @@ def getQuestion(questions):
     return (i)
 
 # Lire sur l'entree standard le choix du joueur
-def readChoice():
-    while (1):
-        res = input()
-        if (res.strip() == "a"):
-            return (0)
-        elif (res.strip() == "b"):
-            return (1)
+def readChoice(question, nb_people, nb_wealth):
+    choice = [0]
+    Question_window(question, nb_people, nb_wealth, choice)
+    return choice
 
 # Check si on est dans les limites (peuple, richesse)
 def checkDead(p, w):
@@ -29,6 +28,8 @@ def applyEffect(nb_people, nb_wealth, question, choice):
         nb_people[0] += question.answ_1_people
         nb_wealth[0] += question.answ_1_wealth
 
+
+
 # Afficher le dilemne
 def showMonthQuestion(question):
     print("\nLa question du mois est :")
@@ -36,14 +37,26 @@ def showMonthQuestion(question):
     print("a)", question.answ_1)
     print("b)", question.answ_2)
 
+
+
+def menu() :
+    root = Tk()
+    bouton=Button(root,text='bienvenue et regle du jeu ma gueule')
+    bouton.pack()
+    root.mainloop()
+
+    
+
 def game () :
     # On charge les questions
     questions = parseQuestions()
 
+    menu()
     # Initialisation des variables de depart
     dead = 0
     nb_people = [25]
     nb_wealth = [25]
+
 
     # Tant qu'on n'est pas mort et qu'il reste des questions
     while (len(questions) and not dead): 
@@ -59,7 +72,7 @@ def game () :
         showMonthQuestion(question) 
         
         # Recuperer le choix
-        choice = readChoice()
+        choice = readChoice(question, nb_people, nb_wealth)
 
         # Appliquer l'effet de la question
         applyEffect(nb_people, nb_wealth, question, choice) 
